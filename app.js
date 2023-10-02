@@ -6,15 +6,15 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { errors, celebrate, Joi } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const auth = require('./middlewares/auth');
+const errorHandler = require('./middlewares/errorHandler');
 const { createUser, login } = require('./controllers/users');
-const NotFoundError = require('./errors/not-found-err');
+const { stringValidate } = require('./utils/constants');
 
-const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
+const { PORT = 3000, NODE_ENV, DB_URL } = process.env;
 
 const app = express();
 
-mongoose.connect(DB_URL, {
+mongoose.connect(NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
   autoIndex: true,
 }).then(() => console.log('connection success'));
@@ -37,39 +37,28 @@ app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
+    email: stringValidate(Joi).email(),
+    password: stringValidate(Joi),
   }).unknown(true),
 }), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
+    name: stringValidate(Joi).min(2).max(30),
+    email: stringValidate(Joi).email(),
+    password: stringValidate(Joi),
   }).unknown(true),
 }), createUser);
 app.get('/signout', (req, res) => {
   res.clearCookie('token').send({ message: 'Логаут' });
 });
 
-app.use(auth);
-
-app.use('/users', require('./routes/users'));
-app.use('/movies', require('./routes/movies'));
-
-app.use('*', (req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
-});
+app.use(require('./routes/index'));
 
 app.use(errorLogger);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
