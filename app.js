@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(apiLimiter);
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: ['http://pavelkazaninmovies.nomoredomainsrocks.ru', 'https://pavelkazaninmovies.nomoredomainsrocks.ru', 'http://localhost:3000'],
   optionsSuccessStatus: 200,
   credentials: true,
 };
