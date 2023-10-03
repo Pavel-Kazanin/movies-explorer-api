@@ -9,6 +9,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 const { createUser, login } = require('./controllers/users');
 const { stringValidate } = require('./utils/constants');
+const { apiLimiter } = require('./utils/rateLimiter');
 
 const { PORT = 3000, NODE_ENV, DB_URL } = process.env;
 
@@ -24,6 +25,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(apiLimiter);
 
 const corsOptions = {
   origin: 'http://localhost:3000',
