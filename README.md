@@ -7,4 +7,4 @@
 
 IP 84.201.174.250
 
-Backend https://api.pavelkazaninmovies.nomoredomainsicu.ru
+Backend https://api.pavelkazaninmovies.nomoredomainsrocks.ru
