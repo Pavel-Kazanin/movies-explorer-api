@@ -19,7 +19,6 @@ router.post('/', celebrate({
     image: urlValidate(Joi),
     trailerLink: urlValidate(Joi),
     thumbnail: urlValidate(Joi),
-    owner: idValidate(Joi),
     movieId: numberValidate(Joi),
     nameRU: stringValidate(Joi),
     nameEN: stringValidate(Joi),
@@ -27,7 +26,7 @@ router.post('/', celebrate({
 }), createMovie);
 router.delete('/:_id', celebrate({
   params: Joi.object().keys({
-    _id: idValidate(Joi),
+    _id: idValidate(Joi).required(),
   }).unknown(true),
 }), deleteMovie);
 

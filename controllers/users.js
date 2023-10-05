@@ -52,6 +52,8 @@ const editUser = (req, res, next) => {
         next(new CastError('Переданы некорректные данные.'));
       } else if (err.name === 'DocumentNotFoundError') {
         next(new NotFoundError(`Пользователь с id: ${req.params._id} не найден`));
+      } else if (err.name === 'MongoServerError') {
+        next(new NotFoundError(`Пользователь с email: ${email} уже существует`));
       } else {
         next(err);
       }

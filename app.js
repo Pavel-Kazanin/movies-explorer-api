@@ -4,18 +4,22 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const { errors, celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
+const handleRouter = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
-const { createUser, login } = require('./controllers/users');
-const { stringValidate } = require('./utils/constants');
 const { apiLimiter } = require('./utils/rateLimiter');
 
-const { PORT = 3000, NODE_ENV, DB_URL } = process.env;
+const {
+  PORT = 3000,
+  NODE_ENV,
+  DB_URL,
+  DB_URL_DEV,
+} = process.env;
 
 const app = express();
 
-mongoose.connect(NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
+mongoose.connect(NODE_ENV === 'production' ? DB_URL : DB_URL_DEV, {
   useNewUrlParser: true,
   autoIndex: true,
 }).then(() => console.log('connection success'));
@@ -37,24 +41,7 @@ app.use(cors(corsOptions));
 
 app.use(requestLogger);
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: stringValidate(Joi).email(),
-    password: stringValidate(Joi),
-  }).unknown(true),
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: stringValidate(Joi).min(2).max(30),
-    email: stringValidate(Joi).email(),
-    password: stringValidate(Joi),
-  }).unknown(true),
-}), createUser);
-app.get('/signout', (req, res) => {
-  res.clearCookie('token').send({ message: 'Логаут' });
-});
-
-app.use(require('./routes/index'));
+app.use(handleRouter);
 
 app.use(errorLogger);
 
