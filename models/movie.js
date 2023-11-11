@@ -24,7 +24,7 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     validate: {
-      validator: (v) => /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net)([a-zA-Z0-9\-._/~:?#[\]@!$&'()*+,;=])*/.test(v),
+      validator: (v) => /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net|co)([a-zA-Z0-9\-._/~:?#[\]@!$&'()*+,;=])*/.test(v),
       message: 'Некорректный URL',
     },
     required: true,
@@ -32,7 +32,7 @@ const movieSchema = new mongoose.Schema({
   trailerLink: {
     type: String,
     validate: {
-      validator: (v) => /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net)([a-zA-Z0-9\-._/~:?#[\]@!$&'()*+,;=])*/.test(v),
+      validator: (v) => /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net|co)([a-zA-Z0-9\-._/~:?#[\]@!$&'()*+,;=])*/.test(v),
       message: 'Некорректный URL',
     },
     required: true,
@@ -40,7 +40,7 @@ const movieSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
     validate: {
-      validator: (v) => /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net)([a-zA-Z0-9\-._/~:?#[\]@!$&'()*+,;=])*/.test(v),
+      validator: (v) => /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net|co)([a-zA-Z0-9\-._/~:?#[\]@!$&'()*+,;=])*/.test(v),
       message: 'Некорректный URL',
     },
     required: true,
