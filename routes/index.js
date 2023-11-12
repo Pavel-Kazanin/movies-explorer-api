@@ -19,7 +19,7 @@ router.post('/signup', celebrate({
   }).unknown(true),
 }), createUser);
 router.get('/signout', (req, res) => {
-  res.clearCookie('token').send({ message: 'Логаут' });
+  res.clearCookie('token', { sameSite: 'None', secure: true }).send({ message: 'Логаут' });
 });
 
 router.use(auth);
